@@ -1,0 +1,8 @@
+#pragma once
+
+#include <rtl/guid.h>
+
+namespace example_solver {
+
+	constexpr GUID id = { 0x4e24dbc6, 0xb4f4, 0x458c, { 0xba, 0xe3, 0x97, 0x13, 0x77, 0x60, 0xb0, 0x13 } };	// {4E24DBC6-B4F4-458C-BAE3-97137760B013}
+}

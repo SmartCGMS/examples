@@ -1,0 +1,5 @@
+LIBRARY example_solver.dll
+
+EXPORTS
+	do_get_solver_descriptors
+	do_solve_generic

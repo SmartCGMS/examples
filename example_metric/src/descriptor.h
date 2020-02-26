@@ -1,0 +1,8 @@
+#pragma once
+
+#include <rtl/guid.h>
+
+namespace example_metric {
+
+	constexpr GUID id = { 0x47a8815, 0x9747, 0x4621, { 0xb2, 0xf1, 0xf9, 0x8f, 0x61, 0xcb, 0x64, 0xc3 } };	// {047A8815-9747-4621-B2F1-F98F61CB64C3}
+}
