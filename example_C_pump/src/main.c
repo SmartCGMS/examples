@@ -1,4 +1,5 @@
 #include "config.h"
+#include "helper.h"
 
 #include "../../../common/iface/SimpleIface.h"
 #include "../../../common/rtl/guid.h"
@@ -9,12 +10,15 @@
 #include <wchar.h>
 #include <float.h>
 
+
 #define ec_level 2
+const uint8_t ec_segment_start = 9;
 #define ec_info 12
 #define ec_war  13
 #define ec_err  14
 
 const GUID signal_IG = { 0x3034568d, 0xf498, 0x455b,{ 0xac, 0x6a, 0xbc, 0xf3, 0x1, 0xf6, 0x9c, 0x9e } };
+const GUID signal_BG = { 0xf666f6c2, 0xd7c0, 0x43e8,{ 0x8e, 0xe1, 0xc8, 0xca, 0xa8, 0xf8, 0x60, 0xe5 } };
 GUID signal_Requested_Insulin_Basal_Rate = { 0xb5897bbd, 0x1e32, 0x408a, { 0xa0, 0xd5, 0xc5, 0xbf, 0xec, 0xf4, 0x47, 0xd9 } };
 
 extern scgms_execution_t SimpleCalling Execute_SCGMS_Configuration(const char *config, TSCGMS_Execution_Callback callback);
@@ -22,12 +26,14 @@ extern BOOL SimpleCalling Inject_SCGMS_Event(const scgms_execution_t execution, 
 extern void SimpleCalling Shutdown_SCGMS(const scgms_execution_t execution, BOOL wait_for_shutdown);
 
 scgms_execution_t executor;
-double last_basal_rate = -DBL_MAX;
+
+double recent_basal_rate = -DBL_MAX;
+
 
 HRESULT Set_Basal_Rate(TSCGMS_Event_Data *event) {
 		//SCGMS_Execution_Callback guarantees that event is IG level
 		
-	event->signal_id = &signal_Requested_Insulin_Basal_Rate;
+	event->signal_id = signal_Requested_Insulin_Basal_Rate;
 
 	
 	const double max_basal = 3.0;
@@ -45,8 +51,8 @@ HRESULT Set_Basal_Rate(TSCGMS_Event_Data *event) {
 	else
 		event->level = 0.0;	//near hypo, suspend the basal
 	
-	if (event->level != last_basal_rate) {	//change the basal only if it changes
-		last_basal_rate = event->level;
+	if (event->level != recent_basal_rate) {	//change the basal only if it changes
+		recent_basal_rate = event->level;
 		return Inject_SCGMS_Event(executor, event) == TRUE ? S_OK : E_FAIL;
 	}
 	else
@@ -55,30 +61,24 @@ HRESULT Set_Basal_Rate(TSCGMS_Event_Data *event) {
 
 
 
-void print_msg(int code, wchar_t *msg) {
-	switch (code) {
-		case ec_info: printf("Information: ");	break;
-		case ec_war:  printf("Warning: ");		break;
-		case ec_err:  printf("Error: ");		break;
-	}
-
-	printf("%ws\n", msg);
-}
-
 
 HRESULT SimpleCalling SCGMS_Execution_Callback(TSCGMS_Event_Data *event) {
 	
 	HRESULT rc = S_OK;
 
 	switch (event->event_code) {
-		case ec_level:
-			if (IsEqualGUID(event->signal_id, &signal_IG))
+		case ec_level: {
+			if (IsEqualGUID(&(event->signal_id), &signal_IG))
 				rc = Set_Basal_Rate(event);
-			break;
 
-		case ec_info:
-		case ec_war:
-		case ec_err: print_msg(event->event_code, event->str);
+			if (IsEqualGUID(&(event->signal_id), &signal_BG))
+				Print_Graph(event->device_time, event->level, recent_basal_rate);
+			}
+			break;
+		
+		case ec_war: printf("Warning: %ws\n", event->str);
+			break;
+		case ec_err: printf("Error: %ws\n", event->str);
 			break;
 	}
 
@@ -89,11 +89,13 @@ HRESULT SimpleCalling SCGMS_Execution_Callback(TSCGMS_Event_Data *event) {
 
 int MainCalling main(int argc, char **argv) {
 	setlocale(LC_ALL, "");
-	if (!_get_current_locale()) setlocale(LC_ALL, "C.UTF-8");
+	if (!_get_current_locale()) 
+		setlocale(LC_ALL, "C.UTF-8");	
 
 	executor = Execute_SCGMS_Configuration(configuration, SCGMS_Execution_Callback);
-	if (executor)
+	if (executor) {
 		Shutdown_SCGMS(executor, TRUE);
+	}
 	else {
 		printf("Error: unable to execute the configuration!\n");
 		return -1;
