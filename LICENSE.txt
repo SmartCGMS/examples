@@ -1,3 +1,6 @@
+Examples for SmartCGMS - continuous glucose monitoring and controlling framework
+https://diabetes.zcu.cz/
+
 Copyright since 2018 University of West Bohemia.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
