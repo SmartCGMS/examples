@@ -78,7 +78,30 @@ void Print_Graph(double device_time, double bg, double basal) {
 
 	if (first_day < 0.0) {
 		first_day = trunc(device_time);
-		printf("day number. hour:minute  | denotes basal insulin rate, * denotes blood glucose level, range 0 to 15 both\n");
+		printf("SmartCGMS - continuous glucose monitoring and controlling framework\n"			
+			"Copyright(c) since 2018 University of West Bohemia.\n\n"
+			"Contact:\n"
+			"https://diabetes.zcu.cz/\n"
+			"diabetes@mail.kiv.zcu.cz\n"
+			"Medical Informatics, Department of Computer Science and Engineering\n"
+			"Faculty of Applied Sciences, University of West Bohemia\n" 
+			"Univerzitni 8, 301 00 Pilsen\n"
+			"Czech Republic\n\n"
+
+			"Licensing terms:\n"
+			"See the enclosed license in the source code files.\n\n"
+
+			"Purpose of this software:\n"
+			"This software demonstrates the use of SmartCGMS simple interface, which allow an easy interoperability\n"
+			"with different languages. Particularly, it demonstrates how use SmartCGMS as diabetic in-silico patient,\n"
+			"while implementing a simple insulin-pump controller. Meals are scheduled dynamically, with a random noise.\n\n"
+			"left columne - day number. hour: minute\n"
+			"| symbol denotes basal insulin rate [U/Hr]\n"
+			"* symbol denotes blood glucose level [mmol/L]\n"
+			". symbols denote target blood glucose level range; 3.9 and 10.0 mmol/L respectively\n\n"
+			"To analyze complete results, use:\n"
+			"* gpredict3 visualization.ini to visualize the C_pump.log of this demonstration\n"
+			"* time_in_range.csv to review the time-in-range statistics\n\n");
 	}
 
 	double day_number, hours, minutes;
@@ -104,9 +127,13 @@ void Print_Graph(double device_time, double bg, double basal) {
 
 	size_t bg_offset = (size_t)(graph_width * bg / max_level);
 	size_t basal_offset = (size_t)(graph_width * basal / max_level);
+	const size_t low_offset = (size_t)(graph_width * 3.9 / max_level);
+	const size_t high_offset = (size_t)(graph_width * 10.0 / max_level);
+
 	for (size_t i = 0; i < (size_t)graph_width; i++) {
 		if (i == bg_offset) ln[i] = '*';
 		else if (i == basal_offset) ln[i] = '|';
+		else if ((i == low_offset) || (i == high_offset)) ln[i] = '.';
 		else ln[i] = ' ';
 	}
 

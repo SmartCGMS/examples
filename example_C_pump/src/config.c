@@ -43,6 +43,26 @@ const char* configuration =
 
 	//for the clarity of the output log, 
 	//let us throw away the rest of the in-silico patient signals
-	"; Signal mapping\n"	"[Filter_005_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"	"Signal_Src_Id = {3BD439F0-8B5A-4004-9B70-24E5E2523B7A}\n"	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"
-	"; Signal mapping\n"	"[Filter_006_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"	"Signal_Src_Id = {9CDDC004-12CA-4380-96FF-8319A8CE79A8}\n"	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"	"; Signal mapping\n"	"[Filter_007_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"	"Signal_Src_Id = {755CFD08-2B12-43B6-A455-58061568446E}\n"	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"
-	"; Signal mapping\n"	"[Filter_008_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"	"Signal_Src_Id = {FC556839-D6C0-4646-A346-0821D25F7E29}\n"	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"	"; Log\n"	"[Filter_009_{C0E942B9-3928-4B81-9B43-A347668200BA}]\n"	"Log_File = C_pump.log";
+	"; Signal mapping\n"
+	"[Filter_005_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"
+	"Signal_Src_Id = {3BD439F0-8B5A-4004-9B70-24E5E2523B7A}\n"
+	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"
+
+	"; Signal mapping\n"
+	"[Filter_006_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"
+	"Signal_Src_Id = {9CDDC004-12CA-4380-96FF-8319A8CE79A8}\n"
+	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"
+
+	"; Signal mapping\n"
+	"[Filter_007_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"
+	"Signal_Src_Id = {755CFD08-2B12-43B6-A455-58061568446E}\n"
+	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"
+
+	"; Signal mapping\n"
+	"[Filter_008_{8FAB525C-5E86-AB81-12CB-D95B1588530A}]\n"
+	"Signal_Src_Id = {FC556839-D6C0-4646-A346-0821D25F7E29}\n"
+	"Signal_Dst_Id = {706E7FDB-8F22-486F-BFA5-6A56D3514209}\n"
+
+	"; Log\n"
+	"[Filter_009_{C0E942B9-3928-4B81-9B43-A347668200BA}]\n"
+	"Log_File = C_pump.log";
