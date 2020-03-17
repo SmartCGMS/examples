@@ -71,7 +71,7 @@ HRESULT Set_Basal_Rate(TSCGMS_Event_Data *event) {
 
 	
 	const double max_basal = 10.0;
-	const double insulin_sensitivity = 3.0;		
+	const double insulin_sensitivity = 2.0;		
 	const double max_IG = 40.0;
 	const double IG_threshold = 5.5;	//mmol/L
 
