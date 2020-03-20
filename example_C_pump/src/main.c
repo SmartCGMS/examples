@@ -128,8 +128,13 @@ HRESULT SimpleCalling SCGMS_Execution_Callback(TSCGMS_Event_Data *event) {
 }
 
 
-
 int MainCalling main(int argc, char **argv) {
+	if (!Load_SCGMS()) {
+		printf("Cannot load the SCGMS engine!\n"
+			"Make sure that this executable is in the same directory the scgms dynamic library.\n");
+		return -2;
+	}
+
 	setlocale(LC_ALL, "");
 	if (!_get_current_locale()) 
 		setlocale(LC_ALL, "C.UTF-8");	
@@ -140,8 +145,10 @@ int MainCalling main(int argc, char **argv) {
 	}
 	else {
 		printf("Error: unable to execute the configuration!\n");
+		Free_SCGMS();
 		return -1;
 	}
 
+	Free_SCGMS();
 	return 0;
 }

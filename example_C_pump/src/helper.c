@@ -53,6 +53,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+
+#include "..\..\..\common\utils\winapi_mapping.h"
+
+TExecute_SCMGS_Configuration Execute_SCGMS_Configuration;
+TInject_SCGMS_Event Inject_SCGMS_Event;
+TShutdown_SCGMS Shutdown_SCGMS;
+
 const GUID signal_IG = { 0x3034568d, 0xf498, 0x455b,{ 0xac, 0x6a, 0xbc, 0xf3, 0x1, 0xf6, 0x9c, 0x9e } };
 const GUID signal_BG = { 0xf666f6c2, 0xd7c0, 0x43e8,{ 0x8e, 0xe1, 0xc8, 0xca, 0xa8, 0xf8, 0x60, 0xe5 } };
 const GUID signal_Carb_Intake = { 0x37aa6ac1, 0x6984, 0x4a06,{ 0x92, 0xcc, 0xa6, 0x60, 0x11, 0xd, 0xd, 0xc7 } };
@@ -186,4 +193,35 @@ void Print_Graph(double device_time, double bg, double basal) {
 	}
 
 	printf("%s", ln);
+}
+
+/*
+//The scms dynamic library exports the following three functions, whose prototype uses scgms_execution_t
+extern scgms_execution_t SimpleCalling Execute_SCGMS_Configuration(const char *config, TSCGMS_Execution_Callback callback);
+extern BOOL SimpleCalling Inject_SCGMS_Event(const scgms_execution_t execution, const TSCGMS_Event_Data *event);
+extern void SimpleCalling Shutdown_SCGMS(const scgms_execution_t execution, BOOL wait_for_shutdown);
+*/
+
+HMODULE scgms = NULL;
+
+int Load_SCGMS() {
+	scgms = LoadLibraryW(L"scgms.dll");
+	if (scgms) {
+		Execute_SCGMS_Configuration = (TExecute_SCMGS_Configuration) GetProcAddress(scgms, "Execute_SCGMS_Configuration");
+		Inject_SCGMS_Event = (TInject_SCGMS_Event) GetProcAddress(scgms, "Inject_SCGMS_Event");
+		Shutdown_SCGMS = (TShutdown_SCGMS) GetProcAddress(scgms, "Shutdown_SCGMS");
+
+		if (!(Execute_SCGMS_Configuration && Inject_SCGMS_Event  && Shutdown_SCGMS)) {
+			Free_SCGMS();
+		}
+	}
+
+	return scgms ? 1 : 0;
+}
+
+void Free_SCGMS() {
+	if (scgms) {
+		FreeLibrary(scgms);
+		scgms = NULL;
+	}
 }
