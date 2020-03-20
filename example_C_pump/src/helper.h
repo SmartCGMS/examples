@@ -60,6 +60,7 @@ extern const GUID signal_BG;
 extern const GUID signal_Carb_Intake;
 extern GUID signal_Requested_Insulin_Basal_Rate;
 
+//The scms dynamic library exports the following three functions, whose prototype uses scgms_execution_t
 extern scgms_execution_t SimpleCalling Execute_SCGMS_Configuration(const char *config, TSCGMS_Execution_Callback callback);
 extern BOOL SimpleCalling Inject_SCGMS_Event(const scgms_execution_t execution, const TSCGMS_Event_Data *event);
 extern void SimpleCalling Shutdown_SCGMS(const scgms_execution_t execution, BOOL wait_for_shutdown);
