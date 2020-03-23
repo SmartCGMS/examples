@@ -143,7 +143,7 @@ int MainCalling main(int argc, char **argv) {
 	}
 
 	setlocale(LC_ALL, "");
-	if (!_get_current_locale()) {
+	if (!getlocale(LC_ALL)) {
 		setlocale(LC_ALL, "C.UTF-8");
 	}
 
