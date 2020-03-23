@@ -49,7 +49,7 @@
 #ifndef __HELPER_H__
 #define __HELPER_H__
 
-#include "../../../common/iface/SimpleIface.h"
+#include <iface/SimpleIface.h>
 
 #define ec_level 2
 #define ec_war  13

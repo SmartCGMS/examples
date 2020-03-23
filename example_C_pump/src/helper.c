@@ -53,8 +53,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-#include "..\..\..\common\utils\winapi_mapping.h"
+#include <utils\winapi_mapping.h>
 
 TExecute_SCMGS_Configuration Execute_SCGMS_Configuration;
 TInject_SCGMS_Event Inject_SCGMS_Event;
