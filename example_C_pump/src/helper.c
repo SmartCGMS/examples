@@ -207,8 +207,17 @@ extern void SimpleCalling Shutdown_SCGMS(const scgms_execution_t execution, BOOL
 
 HMODULE scgms = NULL;
 
+// platform-dependent choice for SCGMS library
+#if defined(WIN32)
+const wchar_t* SCGMS_Library_File_Name = L"scgms.dll";
+#elif defined(__APPLE__)
+const wchar_t* SCGMS_Library_File_Name = L"libscgms.dylib";
+#else
+const wchar_t* SCGMS_Library_File_Name = L"libscgms.so";
+#endif
+
 int Load_SCGMS() {
-	scgms = LoadLibraryW(L"scgms.dll");
+	scgms = LoadLibraryW(SCGMS_Library_File_Name);
 	if (scgms) {
 		Execute_SCGMS_Configuration = (TExecute_SCMGS_Configuration) GetProcAddress(scgms, "Execute_SCGMS_Configuration");
 		Inject_SCGMS_Event = (TInject_SCGMS_Event) GetProcAddress(scgms, "Inject_SCGMS_Event");
