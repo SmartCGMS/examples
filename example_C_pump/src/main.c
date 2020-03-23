@@ -49,8 +49,8 @@
 #include "config.h"
 #include "helper.h"
 
-#include "../../../common/iface/SimpleIface.h"
-#include "../../../common/rtl/guid.h"
+#include <iface/SimpleIface.h>
+#include <rtl/guid.h>
 
 #include <stdio.h>
 #include <stdlib.h>
