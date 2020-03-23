@@ -69,4 +69,4 @@ void Free_SCGMS();
 void Print_Graph(double device_time, double bg, double basal);
 void Schedule_Meals(scgms_execution_t execution, double current_time, uint64_t segment_id);
 
-#endif 
+#endif
