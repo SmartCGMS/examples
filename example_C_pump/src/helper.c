@@ -53,8 +53,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-#include <utils\winapi_mapping.h>
+#include <utils/winapi_mapping.h>
 
 TExecute_SCMGS_Configuration Execute_SCGMS_Configuration;
 TInject_SCGMS_Event Inject_SCGMS_Event;
@@ -64,8 +63,6 @@ const GUID signal_IG = { 0x3034568d, 0xf498, 0x455b,{ 0xac, 0x6a, 0xbc, 0xf3, 0x
 const GUID signal_BG = { 0xf666f6c2, 0xd7c0, 0x43e8,{ 0x8e, 0xe1, 0xc8, 0xca, 0xa8, 0xf8, 0x60, 0xe5 } };
 const GUID signal_Carb_Intake = { 0x37aa6ac1, 0x6984, 0x4a06,{ 0x92, 0xcc, 0xa6, 0x60, 0x11, 0xd, 0xd, 0xc7 } };
 GUID signal_Requested_Insulin_Basal_Rate = { 0xb5897bbd, 0x1e32, 0x408a, { 0xa0, 0xd5, 0xc5, 0xbf, 0xec, 0xf4, 0x47, 0xd9 } };
-
-
 
 typedef struct {
 	int slot;
@@ -81,7 +78,7 @@ int current_meal_index = -1;
 int next_meal_slot = 0;
 double next_meal_cho = -1.0;
 
-void Inject_CHO(scgms_execution_t execution, double device_time, double level, const uint64_t segment_id) {
+static void Inject_CHO(scgms_execution_t execution, double device_time, double level, const uint64_t segment_id) {
 	TSCGMS_Event_Data event;
 	memset(&event, 0, sizeof(event));
 
@@ -95,7 +92,7 @@ void Inject_CHO(scgms_execution_t execution, double device_time, double level, c
 	Inject_SCGMS_Event(execution, &event);
 }
 
-void Schedule_Meal(const TMeal *meal) {
+static void Schedule_Meal(const TMeal *meal) {
 	next_meal_slot = meal->slot + (rand() % 12);
 	next_meal_cho = meal->cho*0.8 + ((double)rand() / (double)RAND_MAX)*meal->cho*0.4;
 }
@@ -121,9 +118,7 @@ void Schedule_Meals(scgms_execution_t execution, double current_time, uint64_t s
 		current_meal_index = (current_meal_index+1) % meal_count;
 		Schedule_Meal(&meal_schedule[current_meal_index]);
 	}
-
 }
-
 
 double first_day = -1.0;
 
@@ -133,7 +128,7 @@ void Print_Graph(double device_time, double bg, double basal) {
 
 	if (first_day < 0.0) {
 		first_day = trunc(device_time);
-		printf("SmartCGMS - continuous glucose monitoring and controlling framework\n"			
+		printf("SmartCGMS - continuous glucose monitoring and controlling framework\n"
 			"Copyright(c) since 2018 University of West Bohemia.\n\n"
 			"Contact:\n"
 			"https://diabetes.zcu.cz/\n"
@@ -186,10 +181,18 @@ void Print_Graph(double device_time, double bg, double basal) {
 	const size_t high_offset = (size_t)(graph_width * 10.0 / max_level);
 
 	for (size_t i = 0; i < (size_t)graph_width; i++) {
-		if (i == bg_offset) ln[i] = '*';
-		else if (i == basal_offset) ln[i] = '|';
-		else if ((i == low_offset) || (i == high_offset)) ln[i] = '.';
-		else ln[i] = ' ';
+		if (i == bg_offset) {
+			ln[i] = '*';
+		}
+		else if (i == basal_offset) {
+			ln[i] = '|';
+		}
+		else if ((i == low_offset) || (i == high_offset)) {
+			ln[i] = '.';
+		}
+		else {
+			ln[i] = ' ';
+		}
 	}
 
 	printf("%s", ln);
@@ -204,8 +207,17 @@ extern void SimpleCalling Shutdown_SCGMS(const scgms_execution_t execution, BOOL
 
 HMODULE scgms = NULL;
 
+// platform-dependent choice for SCGMS library
+#if defined(WIN32)
+const wchar_t* SCGMS_Library_File_Name = L"scgms.dll";
+#elif defined(__APPLE__)
+const wchar_t* SCGMS_Library_File_Name = L"libscgms.dylib";
+#else
+const wchar_t* SCGMS_Library_File_Name = L"libscgms.so";
+#endif
+
 int Load_SCGMS() {
-	scgms = LoadLibraryW(L"scgms.dll");
+	scgms = LoadLibraryW(SCGMS_Library_File_Name);
 	if (scgms) {
 		Execute_SCGMS_Configuration = (TExecute_SCMGS_Configuration) GetProcAddress(scgms, "Execute_SCGMS_Configuration");
 		Inject_SCGMS_Event = (TInject_SCGMS_Event) GetProcAddress(scgms, "Inject_SCGMS_Event");

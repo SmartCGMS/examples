@@ -51,4 +51,4 @@
 
 extern const char* configuration;
 
-#endif 
+#endif
