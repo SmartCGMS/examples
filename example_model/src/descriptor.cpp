@@ -54,7 +54,7 @@
 
 #include <rtl/FilterLib.h>
 #include <rtl/manufactory.h>
-#include <rtl/descriptor_utils.h>
+#include <utils/descriptor_utils.h>
 
 #include <array>
 
@@ -129,7 +129,7 @@ extern "C" HRESULT IfaceCalling do_get_signal_descriptors(scgms::TSignal_Descrip
 	return do_get_descriptors(signal_descriptions, begin, end);
 }
 
-extern "C" HRESULT IfaceCalling do_create_signal(const GUID *calc_id, scgms::ITime_Segment *segment, scgms::ISignal **signal) {
+extern "C" HRESULT IfaceCalling do_create_signal(const GUID *calc_id, scgms::ITime_Segment *segment, const GUID* approx_id, scgms::ISignal **signal) {
 
 	if ((calc_id == nullptr) || (segment == nullptr)) return E_INVALIDARG;
 

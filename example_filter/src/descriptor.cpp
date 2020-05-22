@@ -54,7 +54,7 @@
 
 #include <rtl/FilterLib.h>
 #include <rtl/manufactory.h>
-#include <rtl/descriptor_utils.h>
+#include <utils/descriptor_utils.h>
 
 #include <array>
 

@@ -51,7 +51,7 @@
 #include <lang/dstrings.h>
 #include <iface/DeviceIface.h>
 #include <rtl/SolverLib.h>
-#include <rtl/descriptor_utils.h>
+#include <utils/descriptor_utils.h>
 #include <rtl/manufactory.h>
 
 #include "example_discrete_model.h"

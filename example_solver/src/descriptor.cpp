@@ -52,7 +52,7 @@
 #include <iface/DeviceIface.h>
 #include <iface/UIIface.h>
 #include <lang/dstrings.h>
-#include <rtl/descriptor_utils.h>
+#include <utils/descriptor_utils.h>
 #include <rtl/UILib.h>
 #include <rtl/SolverLib.h>
 
