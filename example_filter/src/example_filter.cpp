@@ -66,7 +66,8 @@ HRESULT IfaceCalling CExample_Filter::QueryInterface(const GUID*  riid, void ** 
 HRESULT IfaceCalling CExample_Filter::Do_Configure(scgms::SFilter_Configuration configuration, refcnt::Swstr_list& error_description) {
 
 	// let us read configured parameters
-	auto example_str = configuration.Read_String(example_filter::rsExample_Config_String);
+	//when reading a strin, use .Read_File_Path to read a file path relative to the configuration file
+	auto example_str = configuration.Read_String(example_filter::rsExample_Config_String);	
 	auto example_num = configuration.Read_Double(example_filter::rsExample_Config_Double, 123.0); // default value parameter is optional
 
 	// here we can put an extra constraint on some of the configuration parameters
