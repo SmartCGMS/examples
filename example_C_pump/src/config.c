@@ -62,6 +62,7 @@ const char* configuration =
 	"; Signal generator\n"
 	"[Filter_001_{9EEB3451-2A9D-49C1-BA37-2EC0B00E5E6D}]\n"
 	"Model = {B387A874-8D1E-460B-A5EC-BA36AB7516DE}\n"
+	"Time_Segment_Id = 1\n"
 	"Feedback_Name = \n"
 	"Synchronize_To_Signal = false\n"
 	"Synchronization_Signal = {FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}\n"
