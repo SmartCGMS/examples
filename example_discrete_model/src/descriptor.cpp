@@ -131,6 +131,7 @@ extern "C" HRESULT IfaceCalling do_get_signal_descriptors(scgms::TSignal_Descrip
 }
 
 extern "C" HRESULT IfaceCalling do_create_discrete_model(const GUID *model_id, scgms::IModel_Parameter_Vector *parameters, scgms::IFilter *output, scgms::IDiscrete_Model **model) {
+	if (!model_id) return E_INVALIDARG;
 
 	if (*model_id == example_discrete_model::model_id) {
 		return Manufacture_Object<CExample_Discrete_Model>(model, parameters, output);

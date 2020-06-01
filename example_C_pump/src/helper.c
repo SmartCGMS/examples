@@ -145,7 +145,7 @@ void Print_Graph(double device_time, double bg, double basal) {
 			"This software demonstrates the use of SmartCGMS simple interface, which allow an easy interoperability\n"
 			"with different languages. Particularly, it demonstrates how use SmartCGMS as diabetic in-silico patient,\n"
 			"while implementing a simple insulin-pump controller. Meals are scheduled dynamically, with a random noise.\n\n"
-			"left columne - day number. hour: minute\n"
+			"left columne - day number. hour:minute\n"
 			"| symbol denotes basal insulin rate [U/Hr]\n"
 			"* symbol denotes blood glucose level [mmol/L]\n"
 			". symbols denote target blood glucose level range; 3.9 and 10.0 mmol/L respectively\n\n"

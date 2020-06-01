@@ -72,9 +72,10 @@ HRESULT CExample_Discrete_Model::Do_Configure(scgms::SFilter_Configuration confi
 	return S_OK;
 }
 
-HRESULT IfaceCalling CExample_Discrete_Model::Set_Current_Time(const double new_current_time) {
+HRESULT IfaceCalling CExample_Discrete_Model::Initialize(const double new_current_time, const uint64_t segment_id) {
 
 	mCurrent_Time = new_current_time;
+	mSegment_id = segment_id;
 
 	return S_OK;
 }
@@ -126,6 +127,7 @@ bool CExample_Discrete_Model::Emit_Blood_Level(double level, double time)
 	evt.signal_id() = example_discrete_model::blood_signal_id;
 	evt.device_id() = example_discrete_model::model_id;
 	evt.device_time() = time;
+	evt.segment_id() = mSegment_id;
 	evt.level() = level;
 	return SUCCEEDED(Send(evt));
 }

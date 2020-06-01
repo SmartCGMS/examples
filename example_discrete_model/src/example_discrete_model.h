@@ -64,6 +64,8 @@ class CExample_Discrete_Model : public virtual scgms::CBase_Filter, public virtu
 
 	private:
 		example_discrete_model::TParameters mParameters;
+		
+		uint64_t mSegment_id = scgms::Invalid_Segment_Id;
 
 		// we have to hold the current timestamp
 		double mCurrent_Time = 0;
@@ -92,7 +94,7 @@ class CExample_Discrete_Model : public virtual scgms::CBase_Filter, public virtu
 		virtual ~CExample_Discrete_Model();
 
 		// scgms::IDiscrete_Model iface
-		virtual HRESULT IfaceCalling Set_Current_Time(const double new_current_time) override final;
+		virtual HRESULT IfaceCalling Initialize(const double new_current_time, const uint64_t segment_id) override final;
 		virtual HRESULT IfaceCalling Step(const double time_advance_delta) override final;
 };
 
