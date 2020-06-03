@@ -69,7 +69,7 @@ HRESULT IfaceCalling CExample_Model_Signal::Get_Continuous_Levels(scgms::IModel_
 	// 2) retrieve IG values - for some reason we may base our model outputs on IG
 	std::vector<double> ig_values(count);
 	rc = mIGSignal->Get_Continuous_Levels(nullptr, times, ig_values.data(), count, scgms::apxNo_Derivation);
-	if (!SUCCEEDED(rc)) {
+	if (!Succeeded(rc)) {
 		return rc;
 	}
 

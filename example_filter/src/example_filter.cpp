@@ -124,7 +124,7 @@ HRESULT IfaceCalling CExample_Filter::Do_Execute(scgms::UDevice_Event event) {
 			// additional event send failure should be detected and the error propagated either immediatelly, or after the original event sending
 			// note this will prepend the new event before the original one
 			auto rc = Send(std::move(evt));
-			if (!SUCCEEDED(rc)) {
+			if (!Succeeded(rc)) {
 				return rc;
 			}
 		}

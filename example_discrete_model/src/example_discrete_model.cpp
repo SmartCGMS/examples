@@ -129,5 +129,5 @@ bool CExample_Discrete_Model::Emit_Blood_Level(double level, double time)
 	evt.device_time() = time;
 	evt.segment_id() = mSegment_id;
 	evt.level() = level;
-	return SUCCEEDED(Send(evt));
+	return Succeeded(Send(evt));
 }
