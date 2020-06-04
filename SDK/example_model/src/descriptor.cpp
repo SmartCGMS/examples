@@ -80,6 +80,7 @@ namespace example_model {
 
 	const scgms::TModel_Descriptor model_descriptor = {
 		model_id,
+		scgms::NModel_Flags::Signal_Model,
 		L"Example model",
 		L"example_model",
 		param_count,

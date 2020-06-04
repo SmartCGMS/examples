@@ -48,6 +48,8 @@
 
 #include "example_metric.h"
 
+#include <cmath>
+
 CExample_Metric::CExample_Metric(const scgms::TMetric_Parameters &params)
 	: mParameters{ params } {
 
