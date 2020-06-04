@@ -3,9 +3,9 @@
 ################################################################################
 
 /.vs
-/example_discrete_model/out/build/x64-Debug
-/example_filter/out/build/x64-Debug
-/example_metric/out/build/x64-Debug
-/example_model/out/build/x64-Debug
-/example_solver/out/build/x64-Debug
-/example_C_pump/msvc
+/SDK/example_discrete_model/out/build/x64-Debug
+/SDK/example_filter/out/build/x64-Debug
+/SDK/example_metric/out/build/x64-Debug
+/SDK/example_model/out/build/x64-Debug
+/SDK/example_solver/out/build/x64-Debug
+/Program/example_C_pump/msvc
