@@ -62,7 +62,7 @@ HRESULT IfaceCalling CExample_Model_Signal::Get_Continuous_Levels(scgms::IModel_
 	const double* times, double* const levels, const size_t count, const size_t derivation_order) const {
 
 	// 1) convert generic parameter container to model-specific parameter set container
-	example_model::TParameters &parameters = scgms::Convert_Parameters<example_model::TParameters>(params, example_model::default_parameters);
+	example_model::TParameters parameters = scgms::Convert_Parameters<example_model::TParameters>(params, example_model::default_parameters);
 
 	HRESULT rc = S_OK;
 

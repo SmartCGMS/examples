@@ -90,6 +90,7 @@ namespace example_discrete_model {
 
 	scgms::TModel_Descriptor descriptor = {
 		model_id,
+		scgms::NModel_Flags::Discrete_Model,
 		L"Example discrete model",
 		nullptr,
 		model_param_count,
