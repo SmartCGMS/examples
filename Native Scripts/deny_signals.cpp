@@ -45,7 +45,7 @@
  * 
  * If the incoming signal is one of the configured ones, then 
  * environment.current_signal_index < native::max_signal_count
- * Hence, we ca use it for a quick check whether it is a configured signal or not.
+ * Hence, we can use it for a quick check whether it is a configured signal or not.
  *
  */
 
