@@ -82,11 +82,16 @@ void execute(GUID& sig_id, double& device_time, double& level,
 					//we are in the desired time range, let's step back the current level back in time					
 					const double adjusted_level = level - time_distance * environment.slope[sig_idx];
 
+					//we are almost there - we just need to get the correctly adjusted reference level
+					const double reference_level = sig_idx == 1 ? environment.level[other_idx] : adjusted_level;
+
 					//and that's it - we have erything we need to produce the error signal's next level
-					rc = environment.send(&environment.signal_id[3],
-						other_time,
-						std::fabs(adjusted_level - environment.level[other_idx]),
-						nullptr, context);
+					if (reference_level != 0.0) {
+						rc = environment.send(&environment.signal_id[3],
+							other_time,
+							std::fabs((adjusted_level - environment.level[other_idx])/reference_level),
+							nullptr, context);
+					}
 				}
 			}
 		}
