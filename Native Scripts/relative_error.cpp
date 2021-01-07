@@ -36,12 +36,10 @@
  *       monitoring", Procedia Computer Science, Volume 141C, pp. 279-286, 2018
  */
 
-#include <iface/NativeIface.h>
-
-#include <cmath>
+#include "level.h"
 
 /*
- * Computes absolute-error signal 
+ * Computes relative-error signal 
  * Set the synchronization signal to scgms::signal_All to get invoked always
  * Set the required signal 1 to the computed signal, which contains an error
  * Set the required signal 2 to the reference signal, against which to compare
@@ -56,44 +54,16 @@
  * In the practice, with e.g., CGMS, the precision loss should be clinically insignificant with properly configured signals.
  */
 
+
 void execute(GUID& sig_id, double& device_time, double& level,
 	HRESULT& rc, const TNative_Environment& environment, const void* context) {
 
-	const auto sig_idx = environment.current_signal_index;
-	if ((sig_idx == 1) || (sig_idx == 2)) {
-		//we are interested in this signal				
-		const auto slope_class = std::fpclassify(environment.slope[sig_idx]);
-		if ((slope_class == FP_NORMAL) || (slope_class == FP_ZERO)) { //we need the slope to calculate the error
-																	  //zero is also a valid slope
-
-			//let's find the desired distance
-			const double max_time_distance = std::isnormal(environment.parameters[0]) ? environment.parameters[0] : 2.5 * scgms::One_Minute;
-
-			//let's find the time of the-other-signal's recent level		
-			const auto other_idx = sig_idx ^ 3; //sig_idx == 1 ? 2 : 1;
-
-			const double other_time = environment.device_time[other_idx];
-			if (std::isnormal(other_time)) {
-
-				const double time_distance = device_time - other_time;
-				//in the comparison, do not forget that some signals might be in the future => test for positivity
-				if ((time_distance < max_time_distance) && (time_distance >= 0.0)) {
-
-					//we are in the desired time range, let's step back the current level back in time					
-					const double adjusted_level = level - time_distance * environment.slope[sig_idx];
-
-					//we are almost there - we just need to get the correctly adjusted reference level
-					const double reference_level = sig_idx == 1 ? environment.level[other_idx] : adjusted_level;
-
-					//and that's it - we have erything we need to produce the error signal's next level
-					if (reference_level != 0.0) {
-						rc = environment.send(&environment.signal_id[3],
-							other_time,
-							std::fabs((adjusted_level - environment.level[other_idx])/reference_level),
-							nullptr, context);
-					}
-				}
-			}
-		}
+	auto [computed, reference, adjusted_time, valid] = Adjust_Levels<1, 2>(environment);
+	if (valid) {
+		if (reference != 0.0)
+			rc = environment.send(&environment.signal_id[3],
+				adjusted_time,
+				std::fabs((computed - reference) / reference),
+				nullptr, context);
 	}
 }

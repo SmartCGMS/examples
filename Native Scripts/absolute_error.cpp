@@ -36,9 +36,7 @@
  *       monitoring", Procedia Computer Science, Volume 141C, pp. 279-286, 2018
  */
 
-#include <iface/NativeIface.h>
-
-#include <cmath>
+#include "level.h"
 
 /*
  * Computes absolute-error signal 
@@ -59,36 +57,11 @@
 void execute(GUID& sig_id, double& device_time, double& level,
 	HRESULT& rc, const TNative_Environment& environment, const void* context) {
 
-	const auto sig_idx = environment.current_signal_index;
-	if ((sig_idx == 1) || (sig_idx == 2)) {
-		//we are interested in this signal				
-		const auto slope_class = std::fpclassify(environment.slope[sig_idx]);
-		if ((slope_class == FP_NORMAL) || (slope_class == FP_ZERO)) { //we need the slope to calculate the error
-																	  //zero is also a valid slope
-
-			//let's find the desired distance
-			const double max_time_distance = std::isnormal(environment.parameters[0]) ? environment.parameters[0] : 2.5 * scgms::One_Minute;
-
-			//let's find the time of the-other-signal's recent level		
-			const auto other_idx = sig_idx ^ 3; //sig_idx == 1 ? 2 : 1;
-
-			const double other_time = environment.device_time[other_idx];
-			if (std::isnormal(other_time)) {
-
-				const double time_distance = device_time - other_time;
-				//in the comparison, do not forget that some signals might be in the future => test for positivity
-				if ((time_distance < max_time_distance) && (time_distance >= 0.0)) {
-
-					//we are in the desired time range, let's step back the current level back in time					
-					const double adjusted_level = level - time_distance * environment.slope[sig_idx];
-
-					//and that's it - we have erything we need to produce the error signal's next level
-					rc = environment.send(&environment.signal_id[3],
-						other_time,
-						std::fabs(adjusted_level - environment.level[other_idx]),
-						nullptr, context);
-				}
-			}
-		}
+	auto [computed, reference, adjusted_time, valid] = Adjust_Levels<1, 2>(environment);
+	if (valid) {
+		rc = environment.send(&environment.signal_id[3],
+			adjusted_time,
+			std::fabs(computed - reference),
+			nullptr, context);
 	}
 }
