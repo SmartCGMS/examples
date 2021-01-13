@@ -50,7 +50,7 @@
  */
 
 void execute(GUID& sig_id, double& device_time, double& level,
-	HRESULT& rc, const TNative_Environment& environment, const void* context) {
+	HRESULT& rc, TNative_Environment& environment, const void* context) {
 
 	if (environment.current_signal_index < native::max_signal_count)
 		//There are two ways to drop this event
