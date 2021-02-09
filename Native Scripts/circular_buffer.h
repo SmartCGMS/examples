@@ -42,14 +42,14 @@
 
 template <size_t N>
 struct TCircular_Buffer {	
-
+protected:
 	struct TLevel {
 		double device_time, level;
 	};
 
 	size_t head = 0;	//head must be zero initially due to the native script memory initialization
 	std::array<TLevel, N> levels;
-
+public:
 	//caller is responsible for pushing values with monotonically increasing device time
 	void push(const double device_time, const double level) noexcept {
 
@@ -60,11 +60,11 @@ struct TCircular_Buffer {
 	}
 
 	//returns nan if there's no such level
-	double level(const double desired_time, const size_t derivative_order) noexcept {
+	double level(const double desired_time, const size_t derivative_order) const noexcept  {
 		//we need to find such a level whose device time greater than the desired device time
 
 		auto next_pos = [](const size_t idx) {return (idx + 1) % N; };
-		auto prev_pos = [](const size_t idx) { return idx > 0 ? idx - 1 : N - 1; }			
+		auto prev_pos = [](const size_t idx) { return idx > 0 ? idx - 1 : N - 1; };
 
 		auto get_k = [&prev_pos, this](const size_t idx)->double {
 			auto& hi = levels[idx];
@@ -98,7 +98,7 @@ struct TCircular_Buffer {
 						return std::numeric_limits<double>::quiet_NaN();	//don't have the data
 
 					const double k = get_k(idx);
-					return levels[idx].level - k * (levels[idx].device_time - desired_time));
+					return levels[idx].level - k * (levels[idx].device_time - desired_time);
 				} else
 					//exact match
 					return levels[idx].level;
