@@ -72,9 +72,6 @@ inline std::tuple<double, double, double, bool> Adjust_Levels(const TNative_Envi
 					//we are in the desired time range, let's step back the current level back in time					
 					const double adjusted_level = environment.level[sig_idx] - time_distance * environment.slope[sig_idx];
 
-					//we are almost there - we just need to get the correctly adjusted reference level
-					const double reference_level = 
-
 					std::get<0>(result) = sig_idx == computed_idx ? adjusted_level : environment.level[other_idx];
 					std::get<1>(result) = sig_idx == computed_idx ? environment.level[other_idx] : adjusted_level;
 					std::get<2>(result) = other_time;

@@ -54,7 +54,7 @@
  * In the practice, with e.g., CGMS, the precision loss should be clinically insignificant with properly configured signals.
  */
 
-void execute(GUID& sig_id, double& device_time, double& level,
+void execute([[maybe_unused]] GUID& sig_id, [[maybe_unused]] double& device_time, [[maybe_unused]] double& level,
 	HRESULT& rc, TNative_Environment& environment, const void* context) {
 
 	auto [computed, reference, adjusted_time, valid] = Adjust_Levels<1, 2>(environment);

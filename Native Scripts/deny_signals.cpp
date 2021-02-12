@@ -49,8 +49,8 @@
  *
  */
 
-void execute(GUID& sig_id, double& device_time, double& level,
-	HRESULT& rc, TNative_Environment& environment, const void* context) {
+void execute([[maybe_unused]] GUID& sig_id, [[maybe_unused]] double& device_time, [[maybe_unused]] double& level,
+	HRESULT& rc, TNative_Environment& environment, [[maybe_unused]] const void* context) {
 
 	if (environment.current_signal_index < native::max_signal_count)
 		//There are two ways to drop this event
