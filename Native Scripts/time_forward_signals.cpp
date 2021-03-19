@@ -39,9 +39,9 @@
 #include <iface/NativeIface.h>
 
 /*
- * deny_signals 
- * You can configure up to 9 signals (native::max_signal_count-1), which will be dropped.
- * -1 because we need to set the first, synchronization signal to scgms::signal_All, to get invoked always.
+ * allow_signals 
+ * You can configure up to 10 signals (native::max_signal_count), which will be forwarded
+ * by the very first parameter (rattime) to the future.
  * 
  * If the incoming signal is one of the configured ones, then 
  * environment.current_signal_index < native::max_signal_count
@@ -52,10 +52,6 @@
 void execute([[maybe_unused]] GUID& sig_id, [[maybe_unused]] double& device_time, [[maybe_unused]] double& level,
 	HRESULT& rc, TNative_Environment& environment, [[maybe_unused]] const void* context) {
 
-	if (environment.current_signal_index < native::max_signal_count)
-		//There are two ways to drop this event
-		//	scgms::signal_Null - like moving it to /dev/nul
-		//	S_FALSE - faster, returns success code indicating that the signal was not forward on purpose
-		//sig_id = scgms::signal_Null;	//succes, but throw this event away
-		rc = S_FALSE;
+	if (environment.current_signal_index >= native::max_signal_count)
+		device_time += environment.parameters[0];
 }
