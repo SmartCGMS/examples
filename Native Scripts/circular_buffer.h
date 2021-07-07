@@ -48,6 +48,7 @@ protected:
 	};
 
 	size_t head = 0;	//head must be zero initially due to the native script memory initialization
+	size_t element_count = 0;
 	std::array<TLevel, N> levels;
 public:
 	//caller is responsible for pushing values with monotonically increasing device time
@@ -57,6 +58,7 @@ public:
 		levels[head].device_time = device_time;
 		levels[head].level = level;
 		head = (head + 1) % N;
+		element_count = std::max(element_count, head);
 	}
 
 	//returns nan if there's no such level
@@ -75,16 +77,16 @@ public:
 			return dy != 0.0 ? dx / dy : 0.0;
 		};
 
-		size_t idx = next_pos(head); //let's search from the oldest value
+		size_t idx = element_count >= N ? head : 0; //let's search from the oldest value		
 		bool found = false;		
 
-		while (idx != head) {
+		do  {
 			found = levels[idx].device_time >= desired_time;
 			if (found) 
 				break;			
 
 			idx = next_pos(idx);
-		}
+		} while (idx != head);
 
 		if (!found)
 			return std::numeric_limits<double>::quiet_NaN();
@@ -94,7 +96,8 @@ public:
 			case scgms::apxNo_Derivation:
 				if (desired_time != levels[idx].device_time) {
 					//we need to adjust the level by going to the past, if possible
-					if (next_pos(head) == idx)
+					idx = prev_pos(idx);	//we go one level back to the past - i.e.; the nearest time that pre-dates the desired level
+					if (idx >= element_count-1)
 						return std::numeric_limits<double>::quiet_NaN();	//don't have the data
 
 					const double k = get_k(idx);
