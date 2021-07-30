@@ -37,37 +37,13 @@
  */
 
 
-#include "circular_buffer.h"
-
-
-
-constexpr size_t recent_levels_count = 10;	//must not be greater than  native::max_parameter_count
-
-
-struct TCustom_Data {	
-	TCircular_Buffer<recent_levels_count*2> recent_levels;	//*2 to mask excessive levels
-};
-
-
 #include <iface/NativeIface.h>
 
-#include <array>
-#include <cmath>
-
-
-const std::array<double, recent_levels_count> time_offset = {	  0.0,						 -5.0 * scgms::One_Minute,
-																-10.0 * scgms::One_Minute,	-15.0 * scgms::One_Minute,
-																-20.0 * scgms::One_Minute,	-25.0 * scgms::One_Minute,
-																-30.0 * scgms::One_Minute,	-35.0 * scgms::One_Minute,
-																-40.0 * scgms::One_Minute,	-45.0 * scgms::One_Minute};										
-
-
 /*
- * Weighted Moving Average
- * Required Signal 1 - signal to be weighted
- * Required Signal 2 - the weighted signal
+ * Linear Regression
+ * Required Signal 1 - signal to be regressed
+ * Required Signal 2 - the regressed signal
  * 
- 
  */
 
 
@@ -76,30 +52,7 @@ void execute([[maybe_unused]] GUID& sig_id,double& device_time, double& level,
 	[[maybe_unused]] HRESULT& rc, TNative_Environment& environment, const void* context) {
 
 	if (environment.current_signal_index == 0) {
-		auto& levels = environment.custom_data->recent_levels;
-		const auto& params = environment.parameters;
-
-		levels.push(device_time, level);
-		
-		double result = 0.0;
-		bool no_nan = true;
-		for (size_t i = 0; i < recent_levels_count; i++) {
-                        const auto &current_parameter = params[i];
-
-                        if (std::isnormal(current_parameter)) {
-                            const double offseted_level = levels.level(device_time + time_offset[i], scgms::apxNo_Derivation);
-                            if (std::isnan(offseted_level)) {
-                                    no_nan = false;
-                                    break;
-                            }
-
-                            result += offseted_level * current_parameter;
-                        }
-		}
-
-		if (no_nan) {
-			environment.send(&environment.signal_id[1], device_time, result, nullptr, context);
-		}
-	}
-		
+            const double regressed_level = environment.parameters[0]*level + environment.parameters[1];
+            environment.send(&environment.signal_id[1], device_time, regressed_level, nullptr, context);
+	}		
 }

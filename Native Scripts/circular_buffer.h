@@ -68,9 +68,9 @@ public:
 		auto next_pos = [](const size_t idx) {return (idx + 1) % N; };
 		auto prev_pos = [](const size_t idx) { return idx > 0 ? idx - 1 : N - 1; };
 
-		auto get_k = [&prev_pos, this](const size_t idx)->double {
-			auto& hi = levels[idx];
-			auto& lo = levels[prev_pos(idx)];
+		auto get_k = [&prev_pos, this](const size_t idx, const size_t prev_idx)->double {
+			const auto& hi = levels[idx];
+			const auto& lo = levels[prev_idx];
 			const double dx = hi.device_time - lo.device_time;
 			const double dy = hi.level - lo.level;
 
@@ -90,17 +90,19 @@ public:
 
 		if (!found)
 			return std::numeric_limits<double>::quiet_NaN();
-
+		
+		const size_t prev_idx = prev_pos(idx);	//we go one level back to the past - i.e.; the nearest time that pre-dates the desired level
+		const bool prev_idx_valid = element_count < N ? idx > 0 : head != prev_idx;
 		
 		switch (derivative_order) {
 			case scgms::apxNo_Derivation:
 				if (desired_time != levels[idx].device_time) {
-					//we need to adjust the level by going to the past, if possible
-					idx = prev_pos(idx);	//we go one level back to the past - i.e.; the nearest time that pre-dates the desired level
-					if (idx >= element_count-1)
+					//we need to adjust the level by going to the past, if possible => prev_idx
+
+					if (!prev_idx_valid)
 						return std::numeric_limits<double>::quiet_NaN();	//don't have the data
 
-					const double k = get_k(idx);
+					const double k = get_k(idx, prev_idx);
 					return levels[idx].level - k * (levels[idx].device_time - desired_time);
 				} else
 					//exact match
@@ -108,7 +110,7 @@ public:
 				
 
 			case scgms::apxFirst_Order_Derivation:
-				return next_pos(head) != idx ? get_k(idx) : std::numeric_limits<double>::quiet_NaN();
+				return prev_idx_valid ? get_k(idx, prev_idx) : std::numeric_limits<double>::quiet_NaN();
 
 			default:
 				return 0.0;
