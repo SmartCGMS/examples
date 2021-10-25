@@ -40,6 +40,7 @@
 
 /*
  * allow_signals 
+ * At least one of the signals must be set to scgms::signal_All! (see below why)
  * You can configure up to 9 signals (native::max_signal_count-1), which will be allowed.
  * All other signals will be dropped.
  * -1 because we need to set the synchronization signal to scgms::signal_All, to get invoked always.
@@ -53,7 +54,9 @@
 void execute([[maybe_unused]] GUID& sig_id, [[maybe_unused]] double& device_time, [[maybe_unused]] double& level,
 	HRESULT& rc, TNative_Environment& environment, [[maybe_unused]] const void* context) {
 
-	if (environment.current_signal_index >= native::max_signal_count)
+	const bool allowed_signal = (environment.current_signal_index < native::max_signal_count) && (sig_id != scgms::signal_All);
+
+	if (!allowed_signal)
 		//There are two ways to drop this event
 		//	scgms::signal_Null - like moving it to /dev/nul
 		//	S_FALSE - faster, returns success code indicating that the signal was not forward on purpose
