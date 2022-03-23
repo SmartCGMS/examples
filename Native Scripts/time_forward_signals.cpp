@@ -49,9 +49,9 @@
  *
  */
 
-void execute([[maybe_unused]] GUID& sig_id, [[maybe_unused]] double& device_time, [[maybe_unused]] double& level,
-	HRESULT& rc, TNative_Environment& environment, [[maybe_unused]] const void* context) {
+void execute([[maybe_unused]] GUID& sig_id, double& device_time, [[maybe_unused]] double& level,
+	[[maybe_unused]] HRESULT& rc, TNative_Environment& environment, [[maybe_unused]] const void* context) {
 
-	if (environment.current_signal_index >= native::max_signal_count)
+	if (environment.current_signal_index < native::max_signal_count)
 		device_time += environment.parameters[0];
 }
