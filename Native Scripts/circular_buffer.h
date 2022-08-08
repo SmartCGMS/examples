@@ -57,8 +57,11 @@ public:
 		//when pushing, we will be continuously overwriting the past values
 		levels[head].device_time = device_time;
 		levels[head].level = level;
-		head = (head + 1) % N;
-		element_count = std::max(element_count, head);
+		
+		const size_t tmp_head = head + 1;
+		element_count = std::max(element_count, tmp_head);
+
+		head = tmp_head  % N;		
 	}
 
 	//returns nan if there's no such level
