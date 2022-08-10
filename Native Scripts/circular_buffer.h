@@ -67,9 +67,11 @@ public:
 	//returns nan if there's no such level
 	double level(const double desired_time, const size_t derivative_order) const noexcept  {
 		//we need to find such a level whose device time greater than the desired device time
+		if (element_count == 0)
+			return std::numeric_limits<double>::quiet_NaN();
 
 		auto next_pos = [](const size_t idx) {return (idx + 1) % N; };
-		auto prev_pos = [](const size_t idx) { return idx > 0 ? idx - 1 : N - 1; };
+		auto prev_pos = [](const size_t idx) { return (idx + N - 1) % N; }; // idx > 0 ? idx - 1 : N - 1;	////(idx + N -1 ) % N	
 
 		auto get_k = [&prev_pos, this](const size_t idx, const size_t prev_idx)->double {
 			const auto& hi = levels[idx];
