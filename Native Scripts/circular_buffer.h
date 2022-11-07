@@ -73,7 +73,7 @@ public:
 		auto next_pos = [](const size_t idx) {return (idx + 1) % N; };
 		auto prev_pos = [](const size_t idx) { return (idx + N - 1) % N; }; // idx > 0 ? idx - 1 : N - 1;	////(idx + N -1 ) % N	
 
-		auto get_k = [&prev_pos, this](const size_t idx, const size_t prev_idx)->double {
+		auto get_k = [this](const size_t idx, const size_t prev_idx)->double {
 			const auto& hi = levels[idx];
 			const auto& lo = levels[prev_idx];
 			const double dx = hi.device_time - lo.device_time;
