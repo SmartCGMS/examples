@@ -52,6 +52,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include <utils/winapi_mapping.h>
 
@@ -80,7 +81,11 @@ double next_meal_cho = -1.0;
 
 static void Inject_CHO(scgms_execution_t execution, double device_time, double level, const uint64_t segment_id) {
 	TSCGMS_Event_Data event;
+#ifdef __STDC_LIB_EXT1__
+	memset_s(&event, sizeof(event), 0, sizeof(event));
+#else
 	memset(&event, 0, sizeof(event));
+#endif
 
 	event.event_code = ec_level;	//Level
 	event.level = level;
@@ -123,9 +128,6 @@ void Schedule_Meals(scgms_execution_t execution, double current_time, uint64_t s
 double first_day = -1.0;
 
 void Print_Graph(double device_time, double bg, double basal) {
-	const double one_hour = 1.0 / 24.0;
-	const double one_minute = one_hour / 60.0;
-
 	if (first_day < 0.0) {
 		first_day = trunc(device_time);
 		printf("SmartCGMS - continuous glucose monitoring and controlling framework\n"
@@ -216,7 +218,7 @@ const wchar_t* SCGMS_Library_File_Name = L"libscgms.dylib";
 const wchar_t* SCGMS_Library_File_Name = L"libscgms.so";
 #endif
 
-int Load_SCGMS() {
+int Load_SCGMS(void) {
 	scgms = LoadLibraryW(SCGMS_Library_File_Name);
 	if (scgms) {
 		Execute_SCGMS_Configuration = (TExecute_SCMGS_Configuration) GetProcAddress(scgms, "Execute_SCGMS_Configuration");
@@ -231,7 +233,7 @@ int Load_SCGMS() {
 	return scgms ? 1 : 0;
 }
 
-void Free_SCGMS() {
+void Free_SCGMS(void) {
 	if (scgms) {
 		FreeLibrary(scgms);
 		scgms = NULL;
