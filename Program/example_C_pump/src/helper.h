@@ -64,8 +64,8 @@ extern TExecute_SCMGS_Configuration Execute_SCGMS_Configuration;
 extern TInject_SCGMS_Event Inject_SCGMS_Event;
 extern TShutdown_SCGMS Shutdown_SCGMS;
 
-int Load_SCGMS();	/*returns zero on failure, non-zero on succes*/
-void Free_SCGMS();
+int Load_SCGMS(void); 	/*returns zero on failure, non-zero on succes*/
+void Free_SCGMS(void);
 void Print_Graph(double device_time, double bg, double basal);
 void Schedule_Meals(scgms_execution_t execution, double current_time, uint64_t segment_id);
 

@@ -57,18 +57,23 @@ public:
 		//when pushing, we will be continuously overwriting the past values
 		levels[head].device_time = device_time;
 		levels[head].level = level;
-		head = (head + 1) % N;
-		element_count = std::max(element_count, head);
+		
+		const size_t tmp_head = head + 1;
+		element_count = std::max(element_count, tmp_head);
+
+		head = tmp_head  % N;		
 	}
 
 	//returns nan if there's no such level
 	double level(const double desired_time, const size_t derivative_order) const noexcept  {
 		//we need to find such a level whose device time greater than the desired device time
+		if (element_count == 0)
+			return std::numeric_limits<double>::quiet_NaN();
 
 		auto next_pos = [](const size_t idx) {return (idx + 1) % N; };
-		auto prev_pos = [](const size_t idx) { return idx > 0 ? idx - 1 : N - 1; };
+		auto prev_pos = [](const size_t idx) { return (idx + N - 1) % N; }; // idx > 0 ? idx - 1 : N - 1;	////(idx + N -1 ) % N	
 
-		auto get_k = [&prev_pos, this](const size_t idx, const size_t prev_idx)->double {
+		auto get_k = [this](const size_t idx, const size_t prev_idx)->double {
 			const auto& hi = levels[idx];
 			const auto& lo = levels[prev_idx];
 			const double dx = hi.device_time - lo.device_time;
