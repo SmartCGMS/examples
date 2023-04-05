@@ -1,0 +1,2 @@
+Some experimental setups use user-defined signals. All these signals are defined in custom_signals.csv
+and you may wish to add this file to the /formats subdirectory, of the directory with scgms.dll/lib/so
