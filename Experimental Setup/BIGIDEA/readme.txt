@@ -1,0 +1,1 @@
+Merge the config\custom_signals.csv with the existing filters\custom_signals.csv file, in the directory with console.exe file.
