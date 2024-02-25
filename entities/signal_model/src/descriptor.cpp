@@ -108,7 +108,7 @@ const std::array<scgms::TSignal_Descriptor, 1> signal_descriptions = { { example
  * Model and signal library interface implementations
  */
 
-HRESULT IfaceCalling do_get_model_descriptors(scgms::TModel_Descriptor **begin, scgms::TModel_Descriptor **end) {
+extern "C" HRESULT IfaceCalling do_get_model_descriptors(scgms::TModel_Descriptor **begin, scgms::TModel_Descriptor **end) {
 
 	return do_get_descriptors(model_descriptions, begin, end);
 }

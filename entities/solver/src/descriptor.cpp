@@ -71,12 +71,12 @@ const std::array<scgms::TSolver_Descriptor, 1> solver_descriptions = { example_s
  * Solver library interface implementations
  */
 
-HRESULT IfaceCalling do_get_solver_descriptors(scgms::TSolver_Descriptor **begin, scgms::TSolver_Descriptor **end) {
+extern "C" HRESULT IfaceCalling do_get_solver_descriptors(scgms::TSolver_Descriptor **begin, scgms::TSolver_Descriptor **end) {
 
 	return do_get_descriptors(solver_descriptions, begin, end);
 }
 
-HRESULT IfaceCalling do_solve_generic(const GUID *solver_id, solver::TSolver_Setup *setup, solver::TSolver_Progress *progress) {
+extern "C" HRESULT IfaceCalling do_solve_generic(const GUID *solver_id, solver::TSolver_Setup *setup, solver::TSolver_Progress *progress) {
 
 	if (*solver_id == example_solver::descriptor.id) {
 		CExample_Solver solver(*setup);

@@ -65,12 +65,12 @@ const std::array<scgms::TMetric_Descriptor, 1> metric_descriptors = { { example_
  * Metric library interface implementations
  */
 
-HRESULT IfaceCalling do_get_metric_descriptors(scgms::TMetric_Descriptor const **begin, scgms::TMetric_Descriptor const **end) {
+extern "C" HRESULT IfaceCalling do_get_metric_descriptors(scgms::TMetric_Descriptor const **begin, scgms::TMetric_Descriptor const **end) {
 
 	return do_get_descriptors(metric_descriptors, begin, end);
 }
 
-HRESULT IfaceCalling do_create_metric(const scgms::TMetric_Parameters *parameters, scgms::IMetric **metric) {
+extern "C" HRESULT IfaceCalling do_create_metric(const scgms::TMetric_Parameters *parameters, scgms::IMetric **metric) {
 
 	if (parameters->metric_id == example_metric::id)
 		return Manufacture_Object<CExample_Metric>(metric, *parameters);
